@@ -70,9 +70,7 @@ Tests and code coverage need to be implemented using Jest & Supertest
 
 ### 📬 API Documentation
 
-Postman Collection is included in the project folder under:
-
-    ./TodoApp.postman_collection.json
+Postman Collection is included in the project folder later:
 
 ### 📧 Contact
 Built with ❤️ by Abdullah Rehman
