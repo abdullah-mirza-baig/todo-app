@@ -19,7 +19,7 @@ A full-stack task management app built with the MERN stack. Users can create, up
 ### 🔧 Backend Setup
 1. Clone the repo:
    ```bash
-   git clone https://github.com/your-repo-url
+   git clone https://github.com/abdullah-mirza-baig/todo-app
    cd backend
 
 2. Install dependencies:
