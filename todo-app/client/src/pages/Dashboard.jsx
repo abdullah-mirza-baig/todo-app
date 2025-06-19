@@ -17,24 +17,28 @@ import {
   FormControl,
 } from "@mui/material";
 import { ConstructionOutlined } from "@mui/icons-material";
+// import apiClient from "../api/axios.js";
 
 const TodoPage = () => {
-  const [todos, setTodos] = useState([]);
-  const [formData, setFormData] = useState({
-      title: "",
-      description: "",
-      dueDate: "",
-      tags: "",
-      priority: "",
-    });
+    const [todos, setTodos] = useState([]);
+    const [formData, setFormData] = useState({
+        title: "",
+        description: "",
+        dueDate: "",
+        tags: "",
+        priority: "",
+        file: null
+      });
     const [editingId, setEditingId] = useState(null);
     const [open, setOpen] = useState(false);
     const [filter, setFilter] = useState("all");
     const [shareModalOpen, setShareModalOpen] = useState(false);
-const [shareEmail, setShareEmail] = useState("");
-const [taskToShare, setTaskToShare] = useState(null);
+    const [shareEmail, setShareEmail] = useState("");
+    const [taskToShare, setTaskToShare] = useState(null);
+    const [loading,setLoading] = useState(false);
 
-    const user = (localStorage.getItem("user"));
+
+const user = (localStorage.getItem("user"));
 
   const fetchTodos = async () => {
     try {
@@ -63,6 +67,7 @@ const [taskToShare, setTaskToShare] = useState(null);
   dueDate: todo.dueDate ? todo.dueDate.slice(0, 10) : "",
   priority: todo.priority || "",
   tags: todo.tags?.join(", ") || "",
+  
 });
       setEditingId(todo._id);
     } else {
@@ -116,27 +121,33 @@ const handleShareSubmit = async (e) => {
 
   const handleSubmit = async (e) => {
   e.preventDefault();
-
-  const payload = {
-    title: formData.title,
-    description: formData.description,
-    dueDate: formData.dueDate,
-    priority: formData.priority,
-    tags: formData.tags.split(",").map(tag => tag.trim()).filter(tag => tag !== ""),
-  };
+  setLoading(true);
 
   try {
+    const form = new FormData();
+    form.append("title", formData.title);
+    form.append("description", formData.description);
+    form.append("dueDate", formData.dueDate);
+    form.append("priority", formData.priority);
+    form.append("tags", formData.tags); // let backend split it
+    if (formData.file) {form.append("file", formData.file);}
+
     if (editingId) {
-      await putReq(`/tasks/${editingId}`, payload);
+      // You can't send FormData with PUT easily, unless using method override
+      await putReq(`/tasks/${editingId}`, form); // optional: convert to patch
     } else {
-      await postReq("/tasks", payload);
+      await postReq("/tasks", form);
     }
+
     fetchTodos();
     handleClose();
   } catch (err) {
     console.error("Error saving todo:", err);
+  } finally {
+    setLoading(false);
   }
 };
+
 
 
   const handleDelete = async (id) => {
@@ -266,6 +277,22 @@ const handleShareSubmit = async (e) => {
         <option value="high">High</option>
       </select>
     </div>
+
+    <div>
+  <label className="block text-sm font-medium text-gray-700 dark:text-gray-500 mb-1">
+    Attach File (Optional)
+  </label>
+  <input
+    type="file"
+    name="attachment"
+    onChange={(e) => setFormData(prev => ({
+      ...prev,
+      file: e.target.files[0]  // Store the file object
+    }))}
+    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white"
+  />
+</div>
+
   </div>
 </DialogContent>
 
@@ -278,9 +305,12 @@ const handleShareSubmit = async (e) => {
   </button>
   <button
     type="submit"
-    className="bg-indigo-600 text-white font-medium py-2 px-4 rounded hover:bg-indigo-700"
+    disabled={loading}
+    className="bg-indigo-600 text-white font-medium py-2 px-4 rounded hover:bg-indigo-700 disabled:opacity-50" 
   >
-    {editingId ? "Update" : "Add"}
+    
+     {editingId ? (loading ? "Updating..." : "Update") : (loading ? "Adding..." : "Add")}
+    
   </button>
 </DialogActions>
 

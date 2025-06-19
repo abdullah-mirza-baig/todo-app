@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { FaGripVertical } from "react-icons/fa";
 import { CSS } from "@dnd-kit/utilities";
-import { Checkbox, IconButton } from "@mui/material";
+import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from "@mui/material";
 import { Delete, Edit, Share  } from "@mui/icons-material";
+import { motion } from "framer-motion";
+
 
 const TodoItem = ({
   todo,
@@ -22,12 +24,21 @@ const TodoItem = ({
     transition,
   };
 
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const isOwner = todo.user?.name === localStorage.getItem("user");
+
+
+
   return (
-     <div
-      ref={setNodeRef}
-      {...attributes}
-    //   {...listeners}
-      style={style}
+     <motion.div
+  ref={setNodeRef}
+  {...attributes}
+  initial={{ opacity: 0, scale: 0.95, y: 20 }}
+  animate={{ opacity: 1, scale: 1, y: 0 }}
+  exit={{ opacity: 0, scale: 0.9, y: -10 }}
+  transition={{ duration: 0.35, ease: "easeOut" }}
+  style={style}
       className="flex items-center justify-between bg-white dark:bg-gray-800 border-b dark:border-gray-700 p-4 rounded-md shadow-sm"
     >
       <div className="flex items-center gap-3">
@@ -37,7 +48,7 @@ const TodoItem = ({
         <Checkbox
           checked={todo.completed}
            onChange={(e) => {
-    e.stopPropagation(); // ✨ Prevent drag event
+    e.stopPropagation(); // Prevent drag event
     onToggleComplete(todo._id);
   }}
           color="primary"
@@ -73,21 +84,62 @@ const TodoItem = ({
     ))}
   </div>
 )}
+
+{todo.file && (
+  <a
+    href={`http://localhost:5000/${todo.file.replace(/\\/g, '/')}`} // fix Windows path slashes
+    target="_blank"
+    rel="noopener noreferrer"
+    className="text-sm text-blue-600 dark:text-blue-400 mt-2 underline"
+  >
+    📎 View Attachment
+  </a>
+)}
+{todo.user?.name && todo.user?.name !== localStorage.getItem("user") && (
+  <span className="text-sm text-gray-500 dark:text-gray-300 italic">
+    Shared by: {todo.user.name}
+  </span>
+)}
         </div>
       </div>
 
       <div className="flex items-center gap-2">
+        {isOwner && (
+  <>
         <IconButton onClick={() => onEdit(todo)} size="small" color="primary">
           <Edit fontSize="small" />
         </IconButton>
-        <IconButton onClick={() => onDelete(todo._id)} size="small" color="error">
+        <IconButton onClick={() => setConfirmOpen(true)} size="small" color="error">
           <Delete fontSize="small" />
         </IconButton>
         <IconButton onClick={() => onShare(todo)} size="small" color="secondary">
-  <Share fontSize="small" />
-</IconButton>
+          <Share fontSize="small" />
+        </IconButton>
+          </>
+)}
+
+<Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
+  <DialogTitle>Confirm Delete</DialogTitle>
+  <DialogContent>Are you sure you want to delete this task?</DialogContent>
+  <DialogActions>
+    <Button onClick={() => setConfirmOpen(false)}  disabled={deleteLoading} >Cancel</Button>
+    <Button
+      onClick={async () => {
+        setDeleteLoading(true);
+        await onDelete(todo._id);
+        setDeleteLoading(false);
+        setConfirmOpen(false);
+      }}
+      color="error"
+      variant="contained"
+    >
+      {deleteLoading ? "Deleting..." : "Delete"}
+    </Button>
+  </DialogActions>
+</Dialog>
+
       </div>
-    </div>
+    </motion.div>
   );
 };
 
