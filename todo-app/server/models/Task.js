@@ -7,6 +7,7 @@ const taskSchema = new mongoose.Schema({
   dueDate: { type: Date },
   tags: [String],
   priority: { type: String, enum: ['low', 'medium', 'high'], default: 'medium' },
+  file: { type: String },
   completed: { type: Boolean, default: false },
   sharedWith: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 }, { timestamps: true });
