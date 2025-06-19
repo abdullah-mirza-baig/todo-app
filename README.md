@@ -2,6 +2,7 @@
 
 A full-stack task management app built with the MERN stack. Users can create, update, delete, and share tasks with collaborators. Features include authentication, drag-and-drop sorting, role-based sharing, and task filtering.
 
+Hosted Link : https://todoapp-frontend-ten.vercel.app/
 ---
 
 ## 🛠️ Tech Stack Used
@@ -49,9 +50,11 @@ Task Create, Edit, Delete
 
 Add Tags, Priority, Due Dates
 
+Add Single File and it can be download
+
 Drag-and-Drop Sorting
 
-Share Tasks with Other Users
+Share Tasks with Other Users with creator name
 
 Responsive UI with Tailwind & MUI
 
@@ -60,17 +63,13 @@ Filter Tasks by Priority, Status, Tags
 
 ### ⚠️ Known Issues / Future Improvements
 
-Task file attachment (e.g. PDF/image) not yet implemented
-
-Role-based permission system (owner vs collaborator) can be extended
-
 Add email notifications (using a queue system like Bull or RabbitMQ)
 
 Tests and code coverage need to be implemented using Jest & Supertest
 
 ### 📬 API Documentation
 
-Postman Collection is included in the project folder later:
+https://documenter.getpostman.com/view/41540167/2sB2xBC9hD
 
 ### 📧 Contact
 Built with ❤️ by Abdullah Rehman
