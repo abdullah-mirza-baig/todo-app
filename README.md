@@ -65,7 +65,44 @@ Filter Tasks by Priority, Status, Tags
 
 Add email notifications (using a queue system like Bull or RabbitMQ)
 
-Tests and code coverage need to be implemented using Jest & Supertest
+# 🧪 Testing
+
+Integration tests were implemented using **Jest** and **Supertest** to ensure the core functionalities of the API are working correctly. These tests simulate real HTTP requests and validate actual responses under authenticated conditions.
+
+## ✅ Endpoints Covered
+
+- 🔐 **POST** `/api/auth/login` – Logs in a user and retrieves a JWT token.  
+- 📝 **POST** `/api/tasks` – Creates a new task.  
+- 📥 **GET** `/api/tasks` – Retrieves all tasks for the logged-in user.  
+- ✏️ **PUT** `/api/tasks/:id` – Updates an existing task.  
+- ❌ **DELETE** `/api/tasks/:id` – Deletes a task.
+
+## 🛠️ Tools Used
+
+- 🧪 **Jest** – Testing framework  
+- 🚀 **Supertest** – HTTP assertions  
+- 🍃 **MongoDB** – For test database connection  
+
+## 📊 Code Coverage (Approx.)
+
+- ✅ **Statements**: ~68%  
+- ✅ **Branches**: ~42%  
+- ✅ **Functions**: ~62%  
+- ✅ **Lines**: ~72%  
+
+> ⚠️ *Due to time constraints, we focused on testing core API features. Some controller and utility logic is partially tested. However, the project is structured to easily expand testing and improve coverage above 80%.*
+
+## 🧾 How to Run Tests
+
+1. 📦 Install dependencies:  
+   ```bash
+   npm install
+
+2. 🧪 Run test suite with coverage:
+   ```bash
+   npm test
+
+# Open coverage/lcov-report/index.html in your browser
 
 ### 📬 API Documentation
 
