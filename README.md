@@ -102,7 +102,7 @@ Integration tests were implemented using **Jest** and **Supertest** to ensure th
    ```bash
    npm test
 
-# Open coverage/lcov-report/index.html in your browser
+## Open coverage/lcov-report/index.html in your browser
 
 ### 📬 API Documentation
 
