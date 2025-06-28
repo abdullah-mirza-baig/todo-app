@@ -17,6 +17,7 @@ const postReq = async (path,data) => {
       return response;
     } catch (error) {
       console.error("Error fetching data:", error);
+      throw error; 
     }
   };
   

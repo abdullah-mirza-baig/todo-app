@@ -1,27 +1,22 @@
-// src/components/Navbar.jsx
+
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { HiOutlineMenuAlt3 } from "react-icons/hi";
 
-const Navbar = () => {
-  const navigate = useNavigate();
-//   const user = (localStorage.getItem("user"));
-    // console.log(user)
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    navigate("/");
-  };
-
+const Navbar = ({ toggleSidebar, toggleCollapse }) => {
   return (
-    <nav className="bg-indigo-600 text-white px-4 py-3 shadow-md flex justify-between items-center">
-      <h1 className="text-xl font-semibold">ToDo App</h1>
-      <button
-        onClick={handleLogout}
-        className="bg-white text-indigo-600 font-medium px-4 py-1 rounded hover:bg-gray-100 transition"
-      >
-        Logout
-      </button>
-    </nav>
+    <header className="w-full bg-[#F3F4F6] shadow px-4 py-3 flex items-center justify-between ">
+      <div className="flex items-center gap-3">
+        <button onClick={toggleSidebar} className="text-gray-700 md:hidden">
+          <HiOutlineMenuAlt3 size={24} />
+        </button>
+
+        <button onClick={toggleCollapse} className="hidden md:block text-gray-700">
+          <HiOutlineMenuAlt3 size={24} />
+        </button>
+
+        <span className="font-bold text-lg text-[#9980FA]">Dashboard</span>
+      </div>
+    </header>
   );
 };
 
