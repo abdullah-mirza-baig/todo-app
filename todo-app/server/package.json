@@ -12,6 +12,19 @@
   },
   "type": "module",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "test": "set NODE_OPTIONS=--experimental-vm-modules&& jest --coverage"
+  },
+  "devDependencies": {
+    "jest": "^30.0.2",
+    "supertest": "^7.1.1"
+  },
+  "jest": {
+  "testEnvironment": "node",
+  "transform": {},
+  "moduleNameMapper": {
+    "^(\\.{1,2}/.*)\\.js$": "$1"
   }
+}
+
 }

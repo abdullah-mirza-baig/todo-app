@@ -23,5 +23,7 @@ app.use("/uploads", express.static("uploads"));
 app.use('/api/auth', apiLimiter , authRoutes );
 app.use('/api/tasks', taskRoutes);
 
+export default app;
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -45,7 +45,7 @@ export const getTasks = async (req, res) => {
         { sharedWith: req.user._id }
       ]
     })
-    .populate('user', 'name')
+    .populate('user', 'name email')
     .sort({ createdAt: -1 });
 
     res.status(200).json(tasks);
@@ -122,5 +122,58 @@ export const shareTask = async (req, res) => {
   } catch (err) {
     console.error('Error sharing task:', err);
     res.status(500).json({ error: 'Server error while sharing task' });
+  }
+};
+
+//accept share task 
+export const acceptSharedTask = async (req, res) => {
+  try {
+    const task = await Task.findOneAndUpdate(
+      {
+        _id: req.params.id,
+        sharedWith: req.user._id,
+        acceptedBy: { $ne: req.user._id }
+      },
+      {
+        $addToSet: { acceptedBy: req.user._id }
+      },
+      { new: true }
+    );
+
+    if (!task) {
+      return res.status(404).json({ error: 'Task not found or already accepted' });
+    }
+
+    res.status(200).json({ message: 'Task accepted', task });
+  } catch (err) {
+    console.error('Error accepting task:', err);
+    res.status(500).json({ error: 'Failed to accept task' });
+  }
+};
+
+export const getTaskSummary = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const createdTasksCount = await Task.countDocuments({ user: userId });
+
+    const sharedTasksCount = await Task.countDocuments({
+      sharedWith: userId,
+      acceptedBy: { $ne: userId } // shared but not accepted yet
+    });
+
+    const acceptedTasksCount = await Task.countDocuments({
+      sharedWith: userId,
+      acceptedBy: userId
+    });
+
+    res.json({
+      createdTasks: createdTasksCount,
+      sharedTasks: sharedTasksCount,
+      acceptedTasks: acceptedTasksCount
+    });
+  } catch (err) {
+    console.error("Dashboard summary error:", err);
+    res.status(500).json({ error: "Failed to load dashboard data" });
   }
 };

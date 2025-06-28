@@ -10,6 +10,7 @@ const taskSchema = new mongoose.Schema({
   file: { type: String },
   completed: { type: Boolean, default: false },
   sharedWith: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  acceptedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 }, { timestamps: true });
 
 const Task = mongoose.model('Task', taskSchema);
